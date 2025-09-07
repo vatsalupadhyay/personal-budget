@@ -1,71 +1,88 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
+body { 
+  margin: 0; 
+  font-family: Arial, sans-serif; 
   background: #f9f9f9;
-  color: #333;
-}
-
-.menu {
-  background: #333;
-}
-.menu ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-}
-.menu li {
-  margin: 0;
-}
-.menu a {
-  display: block;
-  padding: 14px 20px;
-  color: #fff;
-  text-decoration: none;
-}
-.menu a:hover {
-  background: #555;
-}
-
-.hero {
-  text-align: center;
-  padding: 50px 20px;
-  background: #4d5791;
-  color: #fff;
+  color: #333; 
+} 
+ 
+.menu { 
+  background: #333; 
+} 
+.menu ul { 
+  font-size: 10px; 
+  font-family: Tahoma, Arial; 
+ 
+  list-style: none; 
+  display: flex; 
+} 
+.menu li { 
+  margin: 0; 
+} 
+.menu a { 
+  display: block; 
+  padding: 14px 20px; 
+  color: #fff; 
+  text-decoration: none; 
+} 
+.menu a:hover { 
+  background: #555; 
+} 
+ 
+.hero { 
+  text-align: center; 
+  padding: 80px 20px; 
+  color: #fff; 
+  position: relative; 
+  min-height: 350px; 
+  display: flex;  
+  flex-direction: column;  
+  align-items: center; 
+  justify-content: center; 
+  background: linear-gradient(
+              rgba(77, 87, 145, 0.8), 
+              rgba(77, 87, 145, 0.8)
+            ), 
+            url("bg.png") no-repeat center center;
+  background-size: cover; 
 }
 .hero h1 {
-  margin: 0 0 10px;
-  font-size: 2.5em;
+  margin: 0 0 15px;
+  font-size: 3em;
+  font-weight: bold;
 }
 .hero h2 {
   margin: 0;
   font-weight: normal;
+  font-size: 1.3em;
+  color: #011152ff; 
 }
 
-.page-area {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 30px 20px;
-}
-.text-box {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  padding: 20px;
-  max-width: 300px;
-  min-width: 240px;
-}
-.text-box h1 {
-  color: #4d5791;
-  margin-top: 0;
-}
-
-.bottom {
-  background: #333;
-  color: #fff;
-  text-align: center;
-  padding: 15px 0;
-  margin-top: 40px;
+ 
+.page-area { 
+  display: flex; 
+  flex-wrap: wrap; 
+  justify-content: center; 
+  gap: 20px; 
+  padding: 30px 20px; 
+  background: #f9f9f9; 
+} 
+.text-box { 
+  background: #fff; 
+  border-radius: 8px; 
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
+  padding: 20px; 
+  max-width: 300px; 
+  min-width: 240px; 
+} 
+.text-box h1 { 
+  color: #4d5791; 
+  margin-top: 0; 
+} 
+ 
+.bottom { 
+  background: #333; 
+  color: #fff; 
+  text-align: center; 
+  padding: 15px 0; 
+  margin-top: 40px; 
 }
