@@ -2,28 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
-    <!-- Added meta description -->
     <meta
       name="description"
       content="Personal Budget app to manage expenses, track results, and stay on budget. Free and simple to use."
     />
-
-    <!-- Added meta keywords -->
     <meta
       name="keywords"
       content="budget, personal finance, money management, expense tracker"
     />
-    <link rel="stylesheet" href="reset.css" />
-    <!-- Added meta author -->
     <meta name="author" content="Vatsal Upadhyay" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Personal Budget - Manage Your Expenses</title>
+    <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="main.css" />
   </head>
   <body>
-    <!-- Semantic HTML Change -->
     <header>
       <nav class="menu" aria-label="Main Navigation">
         <ul>
@@ -35,14 +28,12 @@
       </nav>
     </header>
 
-    <!--Semantic HTML Change -->
-    <main>
+    <main id="main-content">
       <section class="hero">
         <h1>Personal Budget</h1>
         <h2>A personal-budget management app</h2>
       </section>
 
-      <!-- Semantic HTML Change -->
       <section class="page-area">
         <article class="text-box">
           <h2>Stay on track</h2>
@@ -73,60 +64,125 @@
 
         <article class="text-box">
           <h2>Free</h2>
-  <canvas id="myChart" width="300" height="300" aria-label="Budget Pie Chart" role="img"></canvas>
+          <!-- ChartJS chart -->
+          <canvas
+            id="myChart"
+            width="300"
+            height="300"
+            aria-label="Budget Pie Chart"
+            role="img"
+          ></canvas>
+        </article>
+
+        <article class="text-box">
+          <h2>D3JS Chart</h2>
+          <!-- D3JS chart -->
+          <div id="d3-chart"></div>
         </article>
       </section>
     </main>
 
-    <!-- A11y Change -->
     <footer class="bottom">
       <div class="center">
-        <!-- A11y Change-->
         <p aria-label="All rights reserved message">
           All rights reserved &copy; Fabio Nolasco
         </p>
       </div>
     </footer>
 
-    <!-- A11y Change -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Libraries -->
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"
-      integrity="sha512-h9644v03pHqrIHThkvXhB2PJ8zf5E9IyVnrSfZg8Yj8k4RsO4zldcQc4Bi9iVLUCCsqNY0b4WXVV4UB+wbWENA=="
       crossorigin="anonymous"
-      referrerpolicy="no-referrer"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <!-- Scripts -->
     <script>
-  var dataSource = {
-    labels: ['Eat out', 'Rent', 'Groceries'],
-    datasets: [{
-      data: [30, 350, 90],
-      backgroundColor: ['#ffcd56', '#ff6384', '#36a2eb', '#fd6b19']
-    }]
-  };
+      // ChartJS
+      var dataSource = {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            backgroundColor: [
+              "#ffcd56",
+              "#ff6384",
+              "#36a2eb",
+              "#fd6b19",
+              "#4bc0c0",
+              "#9966ff",
+              "#c9cbcf"
+            ]
+          }
+        ]
+      };
 
-  function createChart() {
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const myPieChart = new Chart(ctx, {
-      type: 'pie',
-      data: dataSource
-    });
-  }
+      function createChart() {
+        const ctx = document.getElementById("myChart").getContext("2d");
+        new Chart(ctx, {
+          type: "pie",
+          data: dataSource
+        });
+      }
 
- function getBudget() {
-    axios.get('/budget')
-      .then(function (res) {
-        console.log(res.data);
-        for (var i = 0; i < res.data.myBudget.length; i++) {
-         dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
-          data.labels[i] = res.data.myBudget[i].title;
-        }
-        createChart();
-  });
- }
-  createChart();
+      function getBudget() {
+        axios.get("/budget").then(function (res) {
+          for (var i = 0; i < res.data.myBudget.length; i++) {
+            dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
+            dataSource.labels[i] = res.data.myBudget[i].title;
+          }
+          createChart();
+        });
+      }
 
-</script>
+      getBudget();
+
+      // D3JS
+      d3.json("/budget").then(function (data) {
+        const width = 500;
+        const height = 300;
+
+        const svg = d3
+          .select("#d3-chart")
+          .append("svg")
+          .attr("width", width)
+          .attr("height", height);
+
+        const x = d3
+          .scaleBand()
+          .domain(data.myBudget.map((d) => d.title))
+          .range([0, width])
+          .padding(0.1);
+
+        const y = d3
+          .scaleLinear()
+          .domain([0, d3.max(data.myBudget, (d) => d.budget)])
+          .nice()
+          .range([height, 0]);
+
+        svg
+          .selectAll("rect")
+          .data(data.myBudget)
+          .enter()
+          .append("rect")
+          .attr("x", (d) => x(d.title))
+          .attr("y", (d) => y(d.budget))
+          .attr("width", x.bandwidth())
+          .attr("height", (d) => height - y(d.budget))
+          .attr("fill", "steelblue");
+
+        // Add axes
+        svg
+          .append("g")
+          .attr("transform", `translate(0,${height})`)
+          .call(d3.axisBottom(x));
+
+        svg.append("g").call(d3.axisLeft(y));
+      });
+    </script>
   </body>
 </html>
