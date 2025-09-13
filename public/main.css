@@ -17,6 +17,15 @@ body {
   display: flex; 
 }
 
+.page-area { 
+  display: grid;                /* Use grid layout */
+  grid-template-columns: 1fr 1fr; /* 2 columns */
+  gap: 24px;                    /* Space between cards */
+  padding: 30px 20px; 
+  background: #f9f9f9; 
+  justify-items: center;        /* Center cards horizontally */
+}
+
 .menu li { 
   margin: 0; 
 }
