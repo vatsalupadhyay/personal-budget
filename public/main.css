@@ -18,12 +18,12 @@ body {
 }
 
 .page-area { 
-  display: grid;                /* Use grid layout */
-  grid-template-columns: 1fr 1fr; /* 2 columns */
-  gap: 24px;                    /* Space between cards */
+  display: grid;                
+  grid-template-columns: 1fr 1fr; 
+  gap: 24px;                   
   padding: 30px 20px; 
   background: #f9f9f9; 
-  justify-items: center;        /* Center cards horizontally */
+  justify-items: center;      
 }
 
 .menu li { 
@@ -83,14 +83,14 @@ body {
   background: #fff; 
   border-radius: 8px; 
   box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
-  padding: 20px; 
+  padding: 40px; 
   max-width: 300px; 
   min-width: 240px; 
-} 
+}
 .text-box h1 { 
   color: #4d5791; 
   margin-top: 0; 
-} 
+}
  
 .bottom { 
   background: #333; 
@@ -98,4 +98,22 @@ body {
   text-align: center; 
   padding: 15px 0; 
   margin-top: 40px; 
+}
+
+
+#d3-chart svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.text-box#d3js-card {
+  max-width: 500px;
+  min-width: 400px;
+  height: 380px;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
