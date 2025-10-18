@@ -71,21 +71,31 @@ body {
 }
 
  
-.page-area { 
-  display: flex; 
-  flex-wrap: wrap; 
-  justify-content: center; 
-  gap: 20px; 
-  padding: 30px 20px; 
-  background: #f9f9f9; 
-} 
-.text-box { 
-  background: #fff; 
-  border-radius: 8px; 
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
-  padding: 40px; 
-  max-width: 300px; 
-  min-width: 240px; 
+.page-area {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  grid-auto-rows: auto;
+  gap: 20px;
+  padding: 30px 20px;
+  background: #f9f9f9;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.text-box {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 24px;
+  max-width: 100%;
+  min-width: 200px;
+  box-sizing: border-box;
+}
+
+/* make non-chart cards the same height and allow scrolling if content overflows */
+.text-box:not(#chart-card):not(#d3js-card) {
+  height: 200px;
+  overflow: auto;
 }
 .text-box h1 { 
   color: #4d5791; 
@@ -108,12 +118,46 @@ body {
 }
 
 .text-box#d3js-card {
-  max-width: 500px;
-  min-width: 400px;
-  height: 380px;
-  padding: 40px 30px;
+  max-width: 100%;
+  height: 420px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+#chart-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 450px;
+}
+
+/* Make ChartJS canvas responsive inside its card */
+#chart-card canvas {
+  width: 100%;
+  max-width: 320px;
+  height: 260px; /* fixed drawing height so Chart.js can maintain aspect */
+  display: block;
+  margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+  .page-area {
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+  }
+  .text-box#d3js-card {
+    height: 400px;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-area {
+    grid-template-columns: 1fr;
+  }
+  .text-box#d3js-card {
+    height: 380px;
+  }
 }

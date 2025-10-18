@@ -71,7 +71,7 @@
           </p>
         </article>
 
-        <article class="text-box">
+        <article class="text-box" id="chart-card">
           <h2>chart</h2>
           <canvas
             id="myChart"
@@ -110,86 +110,105 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
 
     <script>
-      // ChartJS
       var dataSource = {
         labels: [],
         datasets: [
           {
             data: [],
-            backgroundColor: [
-              "#ffcd56",
-              "#ff6384",
-              "#36a2eb",
-              "#fd6b19",
-              "#4bc0c0",
-              "#9966ff",
-              "#c9cbcf"
-            ]
+            backgroundColor: []
           }
         ]
       };
 
       function createChart() {
-        const ctx = document.getElementById("myChart").getContext("2d");
-        new Chart(ctx, {
-          type: "pie",
-          data: dataSource
+        const ctx = document.getElementById('myChart').getContext('2d');
+        if (window._budgetChart) {
+          window._budgetChart.destroy();
+        }
+        window._budgetChart = new Chart(ctx, {
+          type: 'pie',
+          data: dataSource,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top'
+              }
+            }
+          }
         });
       }
 
       function getBudget() {
-        axios.get("/budget").then(function (res) {
+        axios.get('/data').then(function (res) {
           for (var i = 0; i < res.data.myBudget.length; i++) {
-            dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
-            dataSource.labels[i] = res.data.myBudget[i].title;
+            const item = res.data.myBudget[i];
+            dataSource.datasets[0].data[i] = item.value ?? item.budget;
+            dataSource.labels[i] = item.title;
+            dataSource.datasets[0].backgroundColor[i] = item.color || '#cccccc';
           }
           createChart();
+        }).catch(function (err) {
+          console.error('Failed to load budget data:', err);
         });
       }
 
       getBudget();
 
-      // D3JS
-      d3.json("/budget").then(function (data) {
-        const width = 500;
-        const height = 300;
+    d3.json('/data').then(function (data) {
+        const margin = { top: 20, right: 20, bottom: 90, left: 50 };
+        const outerWidth = 600;
+        const outerHeight = 380;
+        const width = outerWidth - margin.left - margin.right;
+        const height = outerHeight - margin.top - margin.bottom;
+
+        d3.select('#d3-chart').selectAll('*').remove();
 
         const svg = d3
-          .select("#d3-chart")
-          .append("svg")
-          .attr("width", width)
-          .attr("height", height);
+          .select('#d3-chart')
+          .append('svg')
+          .attr('width', outerWidth)
+          .attr('height', outerHeight)
+          .append('g')
+          .attr('transform', `translate(${margin.left},${margin.top})`);
 
         const x = d3
           .scaleBand()
           .domain(data.myBudget.map((d) => d.title))
           .range([0, width])
-          .padding(0.1);
+          .padding(0.15);
 
         const y = d3
           .scaleLinear()
-          .domain([0, d3.max(data.myBudget, (d) => d.budget)])
+          .domain([0, d3.max(data.myBudget, (d) => d.value ?? d.budget)])
           .nice()
           .range([height, 0]);
 
         svg
-          .selectAll("rect")
+          .selectAll('rect')
           .data(data.myBudget)
           .enter()
-          .append("rect")
-          .attr("x", (d) => x(d.title))
-          .attr("y", (d) => y(d.budget))
-          .attr("width", x.bandwidth())
-          .attr("height", (d) => height - y(d.budget))
-          .attr("fill", "steelblue");
+          .append('rect')
+          .attr('x', (d) => x(d.title))
+          .attr('y', (d) => y(d.value ?? d.budget))
+          .attr('width', x.bandwidth())
+          .attr('height', (d) => height - y(d.value ?? d.budget))
+          .attr('fill', (d) => d.color || 'steelblue');
 
-        // Add axes
-        svg
-          .append("g")
-          .attr("transform", `translate(0,${height})`)
+        const xAxis = svg
+          .append('g')
+          .attr('transform', `translate(0,${height})`)
           .call(d3.axisBottom(x));
 
-        svg.append("g").call(d3.axisLeft(y));
+        xAxis
+          .selectAll('text')
+          .style('text-anchor', 'end')
+          .attr('dx', '-0.6em')
+          .attr('dy', '0.15em')
+          .attr('transform', 'rotate(-45)');
+
+        svg.append('g').call(d3.axisLeft(y));
       });
     </script>
   </body>

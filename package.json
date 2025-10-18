@@ -21,6 +21,7 @@
   "homepage": "https://github.com/vatsalupadhyay/personal-budget#readme",
   "dependencies": {
     "chart.js": "^4.5.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mongoose": "^7.8.7"
   }
 }
